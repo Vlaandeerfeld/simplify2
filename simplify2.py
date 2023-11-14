@@ -2,16 +2,16 @@ import pandas as pd
 
 # Importing CSV files
 def importFiles():
-	dfPlayerMaster = pd.read_csv('csv/player_master.csv', sep = ";", on_bad_lines='skip', encoding='latin-1', dtype=str)
-	dfPlayerRatings = pd.read_csv('csv/player_ratings.csv', sep = ";", on_bad_lines='skip', encoding='latin-1', dtype=str)
-	dfPlayerSkaterRS = pd.read_csv('csv/player_skater_stats_rs.csv', sep = ';', encoding='latin-1', dtype=str)
-	dfPlayerSkaterPO = pd.read_csv('csv/player_skater_stats_po.csv', sep = ';', encoding='latin-1', dtype=str)
-	dfTeamData = pd.read_csv('csv/team_data.csv', sep = ';', encoding='latin-1', dtype=str)
+	dfPlayerMaster = pd.read_csv('csv/player_master.csv', sep = ";", on_bad_lines='skip', encoding='ISO-8859-15', dtype=str)
+	dfPlayerRatings = pd.read_csv('csv/player_ratings.csv', sep = ";", on_bad_lines='skip', encoding='ISO-8859-15', dtype=str)
+	dfPlayerSkaterRS = pd.read_csv('csv/player_skater_stats_rs.csv', sep = ';', encoding='ISO-8859-15', dtype=str)
+	dfPlayerSkaterPO = pd.read_csv('csv/player_skater_stats_po.csv', sep = ';', encoding='ISO-8859-15', dtype=str)
+	dfTeamData = pd.read_csv('csv/team_data.csv', sep = ';', encoding='ISO-8859-15', dtype=str)
 	dfTeamLines = pd.read_csv('csv/team_lines.csv', sep = ';', encoding='ISO-8859-15',dtype=str,index_col=False)
-	dfPlayerContract = pd.read_csv('csv/player_contract.csv', sep = ';', encoding='latin-1', dtype=str)
-	dfTeamStats = pd.read_csv('csv/team_stats.csv', sep = ';', encoding='latin-1', dtype=str)
-	dfTeamStatsPO = pd.read_csv('csv/team_stats_playoffs.csv', sep = ';', encoding='latin-1', dtype=str)
-	dfTeamRecords = pd.read_csv('csv/team_records.csv', sep = ';', encoding='latin-1', dtype=str)
+	dfPlayerContract = pd.read_csv('csv/player_contract.csv', sep = ';', encoding='ISO-8859-15', dtype=str)
+	dfTeamStats = pd.read_csv('csv/team_stats.csv', sep = ';', encoding='ISO-8859-15', dtype=str)
+	dfTeamStatsPO = pd.read_csv('csv/team_stats_playoffs.csv', sep = ';', encoding='ISO-8859-15', dtype=str)
+	dfTeamRecords = pd.read_csv('csv/team_records.csv', sep = ';', encoding='ISO-8859-15', dtype=str)
 
 	return([dfPlayerMaster, dfPlayerRatings, dfPlayerSkaterRS, dfPlayerSkaterPO, dfTeamData, dfTeamLines, dfPlayerContract, dfTeamStats, dfTeamStatsPO, dfTeamRecords])
 
