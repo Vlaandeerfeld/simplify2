@@ -1,0 +1,1 @@
+simplify CSV files from FHM10 to upload to DisplayStatsSimple. change line 94 to "simplifyFiles(files,str(#teamId)). TeamIds can be found in team data csv for example 19 is calgary flames. Currently only supports one team at a time. Creates two files use team_master_simplified.csv to upload to DisplayStatsSimple
