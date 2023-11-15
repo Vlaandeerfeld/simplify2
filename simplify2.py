@@ -33,18 +33,29 @@ def simplifyFiles(files, teams):
 	dfExport = dfPlayerMasterSimplified.merge(dfPlayerRatings, on = 'PlayerId')
 	dfExport = dfExport.merge(dfPlayerSkaterRSSimplified, on = 'PlayerId', suffixes = ('oalie', None))	
 
-#	print(dfPlayerSkaterPOSimplified)
 	if dfPlayerSkaterPOSimplified.empty == False:
 		dfExport = dfExport.merge(dfPlayerSkaterPOSimplified, on = 'PlayerId', suffixes = ('_RS', '_PO'))	
 
 	dfExport = dfExport.merge(dfPlayerContractSimplified, on = 'PlayerId')
-	
-	dfExport.to_csv('simplifiedCSV/player_master_simplified.csv', index=False)
-	print(dfTeamLines)	
+		
 	dfTeamLinesSimplified = dfTeamLines[dfTeamLines['TeamId'].isin([teams])]
 	dfTeamLinesSimplified = dfTeamLinesSimplified.drop(dfTeamLinesSimplified.iloc[:, 19:92], axis = 1)
 	dfTeamLinesSimplified = dfTeamLinesSimplified.drop(columns = ['Extra Attacker 1', 'Extra Attacker 2', 'Unnamed: 96'], axis = 1)	
 	
+	list1 = dfTeamLinesSimplified.values.tolist()
+	list2 = dfPlayerMasterSimplified.values.tolist()
+
+	for x in range(len(list1)):
+		for z in range(1, len(list1[x])):
+			for a in range(len(list2)):
+				if list1[x][z] == list2[a][1]:
+					list1[x][z] = list2[a][4]
+
+	#export back to dataframe and re label columns				
+	dfTeamLinesSimplified = pd.DataFrame(list1)
+	dfTeamLinesSimplified = dfTeamLinesSimplified.rename(columns={0: "TeamId", 1: "LW1", 2: "C1", 3: "RW1", 4: "LD1", 5: "RD1", 6: "LW2", 7: "C2", 8: "RW2", 9: "LD2", 10: "RD2", 11: "LW3", 12: "C3", 13: "RW3", 14: "LD3", 15: "RD3", 16: "LW4", 17: "C4", 18: "RW4", 19: "G1", 20: "G2"})
+	dfTeamLinesSimplified = dfTeamLinesSimplified.drop(21, axis = 1)
+
 	dfTeamDataSimplified = dfTeamData.drop(dfTeamData.iloc[:, 5:], axis = 1)
 	dfTeamDataSimplified = dfTeamDataSimplified.drop(columns=['LeagueId'])
 	
@@ -65,27 +76,17 @@ def simplifyFiles(files, teams):
 	dfTemp2 = pd.DataFrame() 
 	dfTemp = pd.DataFrame()
 	
-#	dfExport = dfExport.add_suffix('1', axis = 1)
-	
-	for x in range(len(dfExport.index)):
-#		dfExport = dfExport.add_suffix(str(x), axis = 1)	
+	for x in range(len(dfExport.index)):	
 		dfTemp = pd.DataFrame(dfExport.iloc[[x]], columns = dfExport.columns)
 		if x != 0:
 			dfTemp = dfTemp.add_suffix(str(x), axis = 1)	
 			dfTemp = dfTemp.drop(columns = "TeamId" + str(x))
 		dfTemp = dfTemp.reset_index()
 		dfTemp2 = pd.concat([dfTemp2, dfTemp], axis = 1)
-		dfTemp2 = dfTemp2.drop(columns = 'index')
-#		dfTemp2 = dfTemp2.reset_index()	
-#		print(dfTemp2)		
+		dfTemp2 = dfTemp2.drop(columns = 'index')		
 		dfTemp.columns = dfTemp.columns.str.removesuffix(str(x))
-#		dfTemp2 = pd.concat([dfTemp2, dfTemp], axis = 1)
 		
 	dfExport2 = pd.merge(dfExport2, dfTemp2, on ='TeamId')
-
-#	dfTemp2 = dfTemp2.reset_index()
-#	for x in dfExport2.iterrows():
-#		print(x)
 
 	dfExport2.to_csv('simplifiedCSV/team_master_simplified.csv', index = False)
 	
