@@ -37,7 +37,7 @@ def simplifyFiles(files, teams):
 		dfExport = dfExport.merge(dfPlayerSkaterPOSimplified, on = 'PlayerId', suffixes = ('_RS', '_PO'))	
 
 	dfExport = dfExport.merge(dfPlayerContractSimplified, on = 'PlayerId')
-		
+	print(dfExport)
 	dfTeamLinesSimplified = dfTeamLines[dfTeamLines['TeamId'].isin([teams])]
 	dfTeamLinesSimplified = dfTeamLinesSimplified.drop(dfTeamLinesSimplified.iloc[:, 19:92], axis = 1)
 	dfTeamLinesSimplified = dfTeamLinesSimplified.drop(columns = ['Extra Attacker 1', 'Extra Attacker 2', 'Unnamed: 96'], axis = 1)	
@@ -45,17 +45,19 @@ def simplifyFiles(files, teams):
 	list1 = dfTeamLinesSimplified.values.tolist()
 	list2 = dfPlayerMasterSimplified.values.tolist()
 
+	print(list1)
+	print(list2)
 	for x in range(len(list1)):
 		for z in range(1, len(list1[x])):
 			for a in range(len(list2)):
-				if list1[x][z] == list2[a][1]:
-					list1[x][z] = list2[a][4]
+				if list1[x][z] == list2[a][0]:
+					list1[x][z] = list2[a][3]
 
 	#export back to dataframe and re label columns				
-	dfTeamLinesSimplified = pd.DataFrame(list1)
-	dfTeamLinesSimplified = dfTeamLinesSimplified.rename(columns={0: "TeamId", 1: "LW1", 2: "C1", 3: "RW1", 4: "LD1", 5: "RD1", 6: "LW2", 7: "C2", 8: "RW2", 9: "LD2", 10: "RD2", 11: "LW3", 12: "C3", 13: "RW3", 14: "LD3", 15: "RD3", 16: "LW4", 17: "C4", 18: "RW4", 19: "G1", 20: "G2"})
-	dfTeamLinesSimplified = dfTeamLinesSimplified.drop(21, axis = 1)
-
+	dfTeamLinesSimplified1 = pd.DataFrame(list1)
+	dfTeamLinesSimplified1 = dfTeamLinesSimplified1.rename(columns={0: "TeamId", 1: "LW1", 2: "C1", 3: "RW1", 4: "LD1", 5: "RD1", 6: "LW2", 7: "C2", 8: "RW2", 9: "LD2", 10: "RD2", 11: "LW3", 12: "C3", 13: "RW3", 14: "LD3", 15: "RD3", 16: "LW4", 17: "C4", 18: "RW4", 19: "G1", 20: "G2"})
+#	dfTeamLinesSimplified = dfTeamLinesSimplified.drop(21, axis = 1)
+	print(dfTeamLinesSimplified1)
 	dfTeamDataSimplified = dfTeamData.drop(dfTeamData.iloc[:, 5:], axis = 1)
 	dfTeamDataSimplified = dfTeamDataSimplified.drop(columns=['LeagueId'])
 	
@@ -64,12 +66,11 @@ def simplifyFiles(files, teams):
 	dfTeamRecordsSimplified = dfTeamRecords.drop(columns=['League Id', 'Conf Id', 'Div Id', 'Goals For', 'Goals Against'])
 	dfTeamRecordsSimplified = dfTeamRecordsSimplified.rename(columns={'Team Id': 'TeamId'})	
 
-	dfExport2 = dfTeamLinesSimplified.merge(dfTeamDataSimplified, on = 'TeamId')
+	dfExport2 = dfTeamLinesSimplified1.merge(dfTeamDataSimplified, on = 'TeamId')
 	
 	dfExport2 = dfExport2.merge(dfTeamRecordsSimplified, on = 'TeamId')
-	
 	dfExport2 = dfExport2.merge(dfTeamStats, on = 'TeamId')
-	
+
 	if dfTeamStatsPOSimplified.empty == False:
 		dfExport2 = dfExport2.merge(dfTeamStatsPOSimplified, on = 'TeamId', suffixes = ('Team_RS', 'Team_PO'))
 
@@ -86,7 +87,9 @@ def simplifyFiles(files, teams):
 		dfTemp2 = dfTemp2.drop(columns = 'index')		
 		dfTemp.columns = dfTemp.columns.str.removesuffix(str(x))
 		
-	dfExport2 = pd.merge(dfExport2, dfTemp2, on ='TeamId')
+	dfExport2 = pd.merge(dfExport2, dfTemp2, on ='TeamId', suffixes = ('_line', None))
+	for x in dfExport2.iloc[:, 0:176]:
+		print(x)
 
 	dfExport2.to_csv('simplifiedCSV/team_master_simplified.csv', index = False)
 	
