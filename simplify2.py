@@ -15,6 +15,26 @@ def importFiles():
 
 	return([dfPlayerMaster, dfPlayerRatings, dfPlayerSkaterRS, dfPlayerSkaterPO, dfTeamData, dfTeamLines, dfPlayerContract, dfTeamStats, dfTeamStatsPO, dfTeamRecords])
 
+def getLeagues(dfTeamData):
+	#get number of leagues to check for
+#	print("Number of leagues: ")
+	numLeagues = int(1)
+	leagues = ["0"]
+
+	#get league ids
+#	print("Enter league Ids: ")
+#	for x in range(numLeagues):
+#		leagues.append(input())
+
+	#get teams from leagues input
+	teams = []
+	for index, row in dfTeamData.iterrows():
+		for x in range(len(leagues)):
+			if row[1] == leagues[x]:
+				teams.append(row[0])
+				
+	return(teams, leagues)
+
 def simplifyFiles(files, teams):
 	
 	dfPlayerMaster, dfPlayerRatings, dfPlayerSkaterRS, dfPlayerSkaterPO, dfTeamData, dfTeamLines, dfPlayerContract, dfTeamStats, dfTeamStatsPO, dfTeamRecords = files
@@ -91,11 +111,13 @@ def simplifyFiles(files, teams):
 	for x in dfExport2.iloc[:, 0:176]:
 		print(x)
 
-	dfExport2.to_csv('simplifiedCSV/team_master_simplified.csv', index = False)
+	dfExport2.to_csv('simplifiedCSV/team_master_simplified' + dfExport2['Name'][0] + '.csv', index = False)
 	
 def main():
 	files = importFiles()
-	simplifyFiles(files, str(19))
+	teams, leagues = getLeagues(files[4])
+	for x in range(len(teams)):
+		simplifyFiles(files, str(teams[x]))
 
 if __name__ == "__main__":
 	main()
