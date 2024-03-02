@@ -60,7 +60,10 @@ def simplifyFiles(files, teams):
 	dfExport = dfExport.merge(dfPlayerSkaterRSSimplified, on = 'PlayerId')	
 
 	if dfPlayerSkaterPOSimplified.empty == False:
-		dfExport = dfExport.merge(dfPlayerSkaterPOSimplified, on = 'PlayerId', suffixes = ('_RS', '_PO'))	
+		dfExport = dfExport.merge(dfPlayerSkaterPOSimplified, on = 'PlayerId', suffixes = ('_RS', '_PO'))
+	else:
+		dfExport = pd.concat([dfExport, dfPlayerSkaterPOSimplified])
+
 
 	dfExport = dfExport.merge(dfPlayerContractSimplified, on = 'PlayerId')
 	dfTeamLinesSimplified = dfTeamLines[dfTeamLines['TeamId'].isin([teams])]
@@ -100,6 +103,8 @@ def simplifyFiles(files, teams):
 
 	if dfTeamStatsPOSimplified.empty == False:
 	    dfExport2 = dfExport2.merge(dfTeamStatsPOSimplified, on = 'TeamId', suffixes = ('Team_RS', 'Team_PO'))
+	else:
+		dfExport2 = pd.concat([dfExport2, dfTeamStatsPOSimplified])
 
 	dfTemp2 = pd.DataFrame()
 	dfTemp = pd.DataFrame()
